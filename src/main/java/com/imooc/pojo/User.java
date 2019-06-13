@@ -1,9 +1,14 @@
 package com.imooc.pojo;
 
+import org.apache.ibatis.type.Alias;
+
 import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
+@Alias("user")
 public class User {
+    @Id
     private String id;
 
     @NotBlank(message = "用户为空")

@@ -38,3 +38,12 @@ pagehelper:
   helper-dialect: mysql
   support-methods-arguments: true
   params: count=countsql
+#分布式fastDFS文件系统配置
+fdfs:
+  so-timeout: 1501
+  connect-timeout: 601
+  thumb-image:
+    height: 80
+    width: 80
+  tracker-list:
+    - 47.106.232.229:22122

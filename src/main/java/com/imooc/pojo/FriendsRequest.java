@@ -1,8 +1,6 @@
 package com.imooc.pojo;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Table(name = "friends_request")
@@ -18,6 +16,8 @@ public class FriendsRequest {
 
     @Column(name = "request_date_time")
     private Date requestDateTime;
+
+    private User sender;
 
     /**
      * @return id
@@ -73,5 +73,13 @@ public class FriendsRequest {
      */
     public void setRequestDateTime(Date requestDateTime) {
         this.requestDateTime = requestDateTime;
+    }
+
+    public User getSender() {
+        return sender;
+    }
+
+    public void setSender(User sender) {
+        this.sender = sender;
     }
 }

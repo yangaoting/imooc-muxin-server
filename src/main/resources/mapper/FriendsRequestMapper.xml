@@ -9,5 +9,15 @@
     <result column="send_user_id" property="sendUserId" jdbcType="VARCHAR" />
     <result column="accept_user_id" property="acceptUserId" jdbcType="VARCHAR" />
     <result column="request_date_time" property="requestDateTime" jdbcType="TIMESTAMP" />
+    <association property="sender" javaType="user" column="send_user_id" select="com.imooc.mapper.UserMapper.selectByPrimaryKey"/>
   </resultMap>
+  
+  
+  <select id="queryFriendRequestList" resultMap="BaseResultMap" parameterType="string">
+        select
+            id,send_user_id,accept_user_id,request_date_time
+        from
+            friends_request
+        where accept_user_id = #{acceptUserId}
+  </select>
 </mapper>

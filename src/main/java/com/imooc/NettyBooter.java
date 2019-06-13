@@ -1,5 +1,6 @@
 package com.imooc;
 
+
 import com.imooc.netty.WSServer;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -12,6 +13,7 @@ public class NettyBooter implements ApplicationListener<ContextRefreshedEvent> {
         if(event.getApplicationContext().getParent() == null){
             try {
                 WSServer.getInstance().start();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
