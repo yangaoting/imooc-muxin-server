@@ -3,6 +3,7 @@ package com.imooc.pojo;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Table(name = "my_friends")
 public class MyFriends {
@@ -14,6 +15,9 @@ public class MyFriends {
 
     @Column(name = "my_friend_user_id")
     private String myFriendUserId;
+
+    @Transient
+    private User myFriend;
 
     /**
      * @return id
@@ -55,5 +59,13 @@ public class MyFriends {
      */
     public void setMyFriendUserId(String myFriendUserId) {
         this.myFriendUserId = myFriendUserId;
+    }
+
+    public User getMyFriend() {
+        return myFriend;
+    }
+
+    public void setMyFriend(User myFriend) {
+        this.myFriend = myFriend;
     }
 }

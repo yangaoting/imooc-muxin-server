@@ -4,11 +4,15 @@ package com.imooc.controller;
 import com.imooc.ImoocMuxinNettyApplication;
 import com.imooc.enums.OperateFriendRequestTypeNum;
 import com.imooc.enums.SearchFriendsStatusEnums;
+import com.imooc.pojo.ChatMsg;
 import com.imooc.pojo.FriendsRequest;
+import com.imooc.pojo.MyFriends;
 import com.imooc.pojo.User;
 import com.imooc.pojo.bo.UserBO;
 import com.imooc.pojo.vo.UserVO;
+import com.imooc.service.ChatMsgService;
 import com.imooc.service.FriendRequestService;
+import com.imooc.service.MyFriendsService;
 import com.imooc.service.UserService;
 import com.imooc.utils.FastDFSClient;
 import com.imooc.utils.FileUtils;
@@ -35,6 +39,12 @@ public class UserController {
 
     @Autowired
     private FriendRequestService friendRequestService;
+
+    @Autowired
+    private ChatMsgService chatMsgService;
+
+    @Autowired
+    private MyFriendsService myFriendsService;
 
     @Autowired
     private FastDFSClient fastDFSClient;
@@ -185,10 +195,51 @@ public class UserController {
         if(operTypeEnum.type == IGNORE.type){
             //删除请求记录
             friendRequestService.deleteFriendRequest(sendUserId,acceptUserId);
+            log.info("忽略好友请求事务完成，无异常");
         }else if(operTypeEnum.type == PASS.type){
             //添加好友关系
             friendRequestService.passFriendRequest(sendUserId,acceptUserId);
+            log.info("通过好友请求成功");
+
+            //更新通讯录
+            List<MyFriends> myFriendsList = myFriendsService.queryMyFriends(acceptUserId);
+            return IMoocJSONResult.ok(myFriendsList);
         }
         return IMoocJSONResult.ok();
+    }
+
+    @PostMapping("/myFriends")
+    public IMoocJSONResult myFriends(String userId) throws Exception {
+        if(StringUtils.isBlank(userId)){
+            log.error("请求参数为空[userId]");
+            return IMoocJSONResult.errorMsg("请求参数为空[userId:" + userId + "]");
+        }
+
+        //查询好友列表
+        List<MyFriends> myFriendsList = myFriendsService.queryMyFriends(userId);
+        if(myFriendsList != null && myFriendsList.size() > 0){
+            log.info("获取好友：userId" + userId + ",好友人数：" + myFriendsList.size() );
+        }
+
+        return IMoocJSONResult.ok(myFriendsList);
+    }
+
+    /**
+     * 获取未读消息
+     * @param acceptUserId
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/getUnReadMsgList")
+    public IMoocJSONResult getUnReadMsgList(String acceptUserId) throws Exception {
+        if(StringUtils.isBlank(acceptUserId)){
+            log.error("请求参数为空[userId]");
+            return IMoocJSONResult.errorMsg("请求参数为空[userId:" + acceptUserId + "]");
+        }
+
+        List<ChatMsg> unReadMsgList = chatMsgService.getUnReadMsgList(acceptUserId);
+        log.info("acceptUserId:" + acceptUserId +",未读消息count:" + unReadMsgList.size());
+
+        return IMoocJSONResult.ok(unReadMsgList);
     }
 }

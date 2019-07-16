@@ -1,11 +1,16 @@
 package com.imooc.service.impl;
 
+import com.imooc.enums.MsgActionEnum;
 import com.imooc.mapper.FriendsRequestMapper;
 import com.imooc.mapper.MyFriendsMapper;
+import com.imooc.netty.pojo.DataContent;
+import com.imooc.netty.pojo.UserChannelRel;
 import com.imooc.pojo.FriendsRequest;
 import com.imooc.pojo.MyFriends;
 import com.imooc.service.FriendRequestService;
 import com.imooc.utils.JsonUtils;
+import io.netty.channel.Channel;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +59,15 @@ public class FriendRequestServiceImpl implements FriendRequestService {
         saveFriends(acceptUserId,sendUserId);
 
         deleteFriendRequest(sendUserId,acceptUserId);
+
+        Channel channel = UserChannelRel.get(sendUserId);
+        if(channel != null){
+            //使用微博socket推送到请求发起者，更新通讯录
+            DataContent dataContent = new DataContent();
+            dataContent.setAction(MsgActionEnum.PULL_FRIEND.type);
+
+            channel.writeAndFlush(new TextWebSocketFrame(JsonUtils.objectToJson(dataContent)));
+        }
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

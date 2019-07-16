@@ -1,0 +1,18 @@
+{
+  "groups": [
+    {
+      "name": "server",
+      "type": "com.imooc.constants.ImgConstants",
+      "sourceType": "com.imooc.constants.ImgConstants"
+    }
+  ],
+  "properties": [
+    {
+      "name": "server.port",
+      "type": "java.lang.Integer",
+      "sourceType": "com.imooc.constants.ImgConstants",
+      "defaultValue": 0
+    }
+  ],
+  "hints": []
+}
